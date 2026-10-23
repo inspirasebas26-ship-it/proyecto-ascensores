@@ -1,0 +1,106 @@
+<!DOCTYPE html>                                   <!-- Documento HTML5 -->
+<html lang="es">                                  <!-- En español -->
+<head>
+    <meta charset="UTF-8">                                                  <!-- Para que salgan bien las tildes y la ñ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Para que se vea bien en el celular -->
+    <!-- Nuestro CSS. La ruta es relativa (../ = "suba una carpeta"), así funciona abriendo el archivo
+         directo en Visual Studio Code y también cuando corremos la página con Flask -->
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- Nuestro JavaScript de validaciones; "defer" = cárguelo cuando termine de leer el HTML -->
+    <script src="../static/js/validaciones.js" defer></script>
+    <title>Gestionar Productos - Ascensores SENA</title>
+</head>
+<body>
+
+    <!-- ===================================================================
+         Barra de navegación. Las instrucciones de Jinja (los "if") van metidas
+         dentro de comentarios HTML: Flask igual las ejecuta y escoge qué links
+         mostrar, pero si abren el archivo suelto el navegador no las muestra.
+         =================================================================== -->
+    <nav>
+        <a href="../templates/index.html">Inicio</a>                         <!-- Este link siempre sale -->
+        <!-- {% if session.get('usuario_id') %} -->                          <!-- Si ya inició sesión... -->
+        <a href="../templates/productos.html">Catálogo</a>                   <!-- ...le mostramos el catálogo -->
+        <!-- {% if session.get('rol') == 'administrador' %} -->             <!-- Y si además es admin... -->
+        <a href="../templates/admin.html">Panel</a>                          <!-- ...le salen sus links extra -->
+        <a href="../templates/admin_productos.html">Productos</a>
+        <a href="../templates/admin_usuarios.html">Usuarios</a>
+        <a href="../templates/admin_mensajes.html">Mensajes</a>
+        <!-- {% endif %} -->                                                <!-- Fin de los links del admin -->
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>                 <!-- Botón para salir -->
+        <!-- {% else %} -->                                                 <!-- Si NO ha iniciado sesión... -->
+        <a href="../templates/login.html">Iniciar Sesión</a>                 <!-- ...le ofrecemos entrar -->
+        <a href="../templates/register.html">Registrarse</a>                 <!-- ...o registrarse -->
+        <!-- {% endif %} -->
+        <a href="../templates/contacto.html">Contacto</a>                    <!-- Contacto lo ve todo el mundo -->
+    </nav>
+
+    <!-- Encabezado con el botón para crear (la C del CRUD) -->
+    <div class="panel-header">
+        <h2>Gestionar Productos</h2>
+        <div>
+            <a href="../templates/producto_form.html" class="btn">+ Nuevo producto</a>
+            <a href="{{ url_for('reporte_productos_excel') }}" class="btn btn-verde">Exportar a Excel</a>
+        </div>
+    </div>
+
+    <section class="seccion">
+        <!-- Avisos que manda Python con flash() (rojos si son error, verdes si salió bien).
+             Truco: avisos() es una función de app.py que "abre" este comentario para pintar los avisos.
+             Si abren el archivo suelto, el navegador lo ve como comentario y no muestra nada raro. -->
+        <!-- {{ avisos() }} -->
+        <!-- Cajita escondida donde el JavaScript escribe sus errores antes de mandar el formulario -->
+        <div id="errores-js" class="mensaje-error oculto"></div>
+
+        <!-- Este div deja que la tabla se mueva de lado en el celular sin dañar la página -->
+        <div class="tabla-contenedor">
+            <!-- Tabla con todos los productos (la R del CRUD) -->
+            <table class="tabla">
+                <thead>                           <!-- Los títulos de las columnas -->
+                    <tr>
+                        <th>ID</th>
+                        <th>Modelo</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Activo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>                           <!-- Las filas con los datos -->
+                    <!-- {% for p in productos %} --><!-- Una fila por cada producto que llegó de la base -->
+                    <tr>
+                        <td>{{ p.id }}</td>
+                        <td>{{ p.modelo }}</td>
+                        <td>{{ p.nombre }}</td>
+                        <td>{{ p.categoria }}</td>
+                        <td>{{ p.precio | pesos }}</td>
+                        <td>{{ p.stock }}</td>
+                        <td>{{ 'Sí' if p.activo else 'No' }}</td>  <!-- Mostramos Sí/No en vez de 1/0 -->
+                        <td class="acciones">
+                            <!-- Botón editar (la U del CRUD): lleva al formulario con el id del producto -->
+                            <a href="{{ url_for('producto_editar', id=p.id) }}" class="btn btn-peq">Editar</a>
+                            <!-- Botón eliminar (la D del CRUD): va en un form POST para que no se borre con solo abrir un link.
+                                 confirm() muestra la ventanita de "¿seguro?"; si dicen que no, no se envía -->
+                            <form action="{{ url_for('producto_eliminar', id=p.id) }}" method="POST" data-nombre="{{ p.nombre }}"
+                                  onsubmit="return confirm('¿Seguro que quieres eliminar ' + this.dataset.nombre + '?')">
+                                <button type="submit" class="btn btn-peq btn-rojo">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- {% else %} -->
+                    <tr><td colspan="8" class="texto-centrado">No hay productos registrados.</td></tr>
+                    <!-- {% endfor %} -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Pie de página -->
+    <footer>
+        &copy; 2026 Ascensores SENA - Proyecto formativo de Análisis y Desarrollo de Software
+    </footer>
+
+</body>
+</html>
