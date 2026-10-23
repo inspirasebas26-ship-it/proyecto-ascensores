@@ -1,6 +1,0 @@
-# Librerías que necesita el proyecto. Se instalan con:  pip install -r requirements.txt
-Flask                   # El framework web (el que arma las páginas)
-mysql-connector-python  # El puente para hablar con MySQL
-openpyxl                # Para crear el reporte en Excel
-fpdf2                   # Para crear el reporte en PDF
-gunicorn                # El servidor que usa Render para correr la página en la nube
