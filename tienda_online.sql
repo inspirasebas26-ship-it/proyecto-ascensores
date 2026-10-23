@@ -1,11 +1,11 @@
--- =====================================================================
--- Script de la base de datos de nuestra tienda de ascensores (proyecto SENA)
--- Aquí creamos todas las tablas y metemos unos datos de prueba para arrancar.
--- * En el PC (XAMPP): se pega completo en la pestaña SQL de phpMyAdmin.
--- * En la nube (Aiven): NO hay que correrlo a mano. Cuando la página arranca,
---   app.py revisa si faltan las tablas y corre este archivo solito
---   (se salta las dos primeras órdenes, porque allá la base ya existe y se llama defaultdb).
--- =====================================================================
+
+ Script de la base de datos de nuestra tienda de ascensores (proyecto SENA)
+Aquí creamos todas las tablas y metemos unos datos de prueba para arrancar.
+ * En el PC (XAMPP): se pega completo en la pestaña SQL de phpMyAdmin.
+ * En la nube (Aiven): NO hay que correrlo a mano. Cuando la página arranca,
+app.py revisa si faltan las tablas y corre este archivo solito
+(se salta las dos primeras órdenes, porque allá la base ya existe y se llama defaultdb).
+
 
 -- Creamos la base de datos solo si no existe todavía (así no explota si la corremos dos veces)
 CREATE DATABASE IF NOT EXISTS tienda_ascensores;
