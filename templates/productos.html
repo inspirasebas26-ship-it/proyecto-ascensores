@@ -1,0 +1,86 @@
+<!DOCTYPE html>                                   <!-- Documento HTML5 -->
+<html lang="es">                                  <!-- En español -->
+<head>
+    <meta charset="UTF-8">                                                  <!-- Para que salgan bien las tildes y la ñ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Para que se vea bien en el celular -->
+    <!-- Nuestro CSS. La ruta es relativa (../ = "suba una carpeta"), así funciona abriendo el archivo
+         directo en Visual Studio Code y también cuando corremos la página con Flask -->
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- Nuestro JavaScript de validaciones; "defer" = cárguelo cuando termine de leer el HTML -->
+    <script src="../static/js/validaciones.js" defer></script>
+    <title>Catálogo de Productos - Ascensores SENA</title>
+</head>
+<body>
+
+    <!-- ===================================================================
+         Barra de navegación. Las instrucciones de Jinja (los "if") van metidas
+         dentro de comentarios HTML: Flask igual las ejecuta y escoge qué links
+         mostrar, pero si abren el archivo suelto el navegador no las muestra.
+         =================================================================== -->
+    <nav>
+        <a href="../templates/index.html">Inicio</a>                         <!-- Este link siempre sale -->
+        <!-- {% if session.get('usuario_id') %} -->                          <!-- Si ya inició sesión... -->
+        <a href="../templates/productos.html">Catálogo</a>                   <!-- ...le mostramos el catálogo -->
+        <!-- {% if session.get('rol') == 'administrador' %} -->             <!-- Y si además es admin... -->
+        <a href="../templates/admin.html">Panel</a>                          <!-- ...le salen sus links extra -->
+        <a href="../templates/admin_productos.html">Productos</a>
+        <a href="../templates/admin_usuarios.html">Usuarios</a>
+        <a href="../templates/admin_mensajes.html">Mensajes</a>
+        <!-- {% endif %} -->                                                <!-- Fin de los links del admin -->
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>                 <!-- Botón para salir -->
+        <!-- {% else %} -->                                                 <!-- Si NO ha iniciado sesión... -->
+        <a href="../templates/login.html">Iniciar Sesión</a>                 <!-- ...le ofrecemos entrar -->
+        <a href="../templates/register.html">Registrarse</a>                 <!-- ...o registrarse -->
+        <!-- {% endif %} -->
+        <a href="../templates/contacto.html">Contacto</a>                    <!-- Contacto lo ve todo el mundo -->
+    </nav>
+
+    <!-- Encabezado del catálogo con el saludo -->
+    <div class="panel-header">
+        <h2>Catálogo de Productos</h2>
+        <!-- session.nombre y session.rol los guardamos en Python cuando hizo login -->
+        <span class="texto-gris">Hola, {{ session.get('nombre') }} | Rol: {{ session.get('rol') }}</span>
+    </div>
+
+    <section class="seccion">
+        <!-- Avisos que manda Python con flash() (rojos si son error, verdes si salió bien).
+             Truco: avisos() es una función de app.py que "abre" este comentario para pintar los avisos.
+             Si abren el archivo suelto, el navegador lo ve como comentario y no muestra nada raro. -->
+        <!-- {{ avisos() }} -->
+        <!-- Cajita escondida donde el JavaScript escribe sus errores antes de mandar el formulario -->
+        <div id="errores-js" class="mensaje-error oculto"></div>
+
+        <div class="productos-destacados">
+            <!-- Recorremos la lista de productos que mandó Python desde la base de datos -->
+            <!-- {% for p in productos %} -->
+                <div class="tarjeta-producto">
+                    <!-- Si el producto tiene link de imagen la mostramos; si no, un cuadrito gris -->
+                    <!-- {% if p.imagen_url %} -->
+                        <img src="{{ p.imagen_url }}" alt="{{ p.nombre }}" class="imagen-producto">
+                    <!-- {% else %} -->
+                        <div class="imagen-placeholder">{{ p.categoria }}</div>
+                    <!-- {% endif %} -->
+                    <h3>{{ p.nombre }}</h3>                          <!-- Nombre del producto -->
+                    <p class="texto-gris">Modelo {{ p.modelo }}</p>  <!-- Su modelo -->
+                    <p>{{ p.descripcion }}</p>                       <!-- La descripción -->
+                    <!-- {% if p.capacidad_personas %} --><!-- Esto solo sale para los ascensores, que sí tienen capacidad -->
+                        <p class="texto-gris">{{ p.capacidad_personas }} personas · {{ p.capacidad_carga_kg }} kg</p>
+                    <!-- {% endif %} -->
+                    <p><strong>{{ p.precio | pesos }}</strong></p>   <!-- Precio con el filtro "pesos" que hicimos en Python -->
+                    <p class="texto-gris">Disponibles: {{ p.stock }}</p>
+                    <!-- Por ahora no hay carrito: el cliente nos escribe para cotizar -->
+                    <a href="../templates/contacto.html" class="btn">Solicitar información</a>
+                </div>
+            <!-- {% else %} --><!-- Este else del for sale cuando la lista viene vacía -->
+                <p class="texto-centrado">Todavía no hay productos disponibles.</p>
+            <!-- {% endfor %} -->
+        </div>
+    </section>
+
+    <!-- Pie de página -->
+    <footer>
+        &copy; 2026 Ascensores SENA - Proyecto formativo de Análisis y Desarrollo de Software
+    </footer>
+
+</body>
+</html>

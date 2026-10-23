@@ -1,0 +1,72 @@
+<!DOCTYPE html>                       <!-- Le avisamos al navegador que esto es HTML5 -->
+<html lang="es">                      <!-- La página está en español -->
+<head>
+    <meta charset="UTF-8">                                                  <!-- Para que salgan bien las tildes y la ñ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Para que se vea bien en el celular -->
+    <!-- Nuestro CSS. La ruta es relativa (../ = "suba una carpeta"), así funciona abriendo el archivo
+         directo en Visual Studio Code y también cuando corremos la página con Flask -->
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- Nuestro JavaScript de validaciones; "defer" = cárguelo cuando termine de leer el HTML -->
+    <script src="../static/js/validaciones.js" defer></script>
+    <title>Inicio - Ascensores SENA</title> <!-- Lo que sale en la pestaña del navegador -->
+</head>
+<body>
+
+    <!-- ===================================================================
+         Barra de navegación. Las instrucciones de Jinja (los "if") van metidas
+         dentro de comentarios HTML: Flask igual las ejecuta y escoge qué links
+         mostrar, pero si abren el archivo suelto el navegador no las muestra.
+         =================================================================== -->
+    <nav>
+        <a href="../templates/index.html">Inicio</a>                         <!-- Este link siempre sale -->
+        <!-- {% if session.get('usuario_id') %} -->                          <!-- Si ya inició sesión... -->
+        <a href="../templates/productos.html">Catálogo</a>                   <!-- ...le mostramos el catálogo -->
+        <!-- {% if session.get('rol') == 'administrador' %} -->             <!-- Y si además es admin... -->
+        <a href="../templates/admin.html">Panel</a>                          <!-- ...le salen sus links extra -->
+        <a href="../templates/admin_productos.html">Productos</a>
+        <a href="../templates/admin_usuarios.html">Usuarios</a>
+        <a href="../templates/admin_mensajes.html">Mensajes</a>
+        <!-- {% endif %} -->                                                <!-- Fin de los links del admin -->
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>                 <!-- Botón para salir -->
+        <!-- {% else %} -->                                                 <!-- Si NO ha iniciado sesión... -->
+        <a href="../templates/login.html">Iniciar Sesión</a>                 <!-- ...le ofrecemos entrar -->
+        <a href="../templates/register.html">Registrarse</a>                 <!-- ...o registrarse -->
+        <!-- {% endif %} -->
+        <a href="../templates/contacto.html">Contacto</a>                    <!-- Contacto lo ve todo el mundo -->
+    </nav>
+
+    <!-- Sección grande de bienvenida (el "hero") -->
+    <section class="hero">
+        <h1>Bienvenido a Ascensores SENA</h1>                   <!-- Título principal -->
+        <p>Vendemos, instalamos y mantenemos ascensores residenciales y comerciales, además de repuestos.</p>
+        <br>                                                    <!-- Un saltico de línea -->
+        <a href="../templates/productos.html" class="btn">Ver catálogo</a> <!-- Si no tiene sesión, Flask lo manda al login -->
+    </section>
+
+    <!-- Aquí salen los avisos (por ejemplo si se cayó la base de datos) -->
+    <section class="seccion">
+        <!-- Avisos que manda Python con flash() (rojos si son error, verdes si salió bien).
+             Truco: avisos() es una función de app.py que "abre" este comentario para pintar los avisos.
+             Si abren el archivo suelto, el navegador lo ve como comentario y no muestra nada raro. -->
+        <!-- {{ avisos() }} -->
+        <!-- Cajita escondida donde el JavaScript escribe sus errores antes de mandar el formulario -->
+        <div id="errores-js" class="mensaje-error oculto"></div>
+    </section>
+
+    <!-- Sección de quiénes somos -->
+    <section class="seccion">
+        <h2>¿Quiénes somos?</h2>
+        <p class="texto-centrado">
+            Somos una tienda en línea creada como proyecto formativo del programa de Análisis y Desarrollo de Software del SENA.
+            Nuestro objetivo es ofrecer una plataforma sencilla para consultar ascensores y repuestos,
+            y para que el administrador gestione el inventario, los usuarios y los mensajes de los clientes.
+        </p>
+    </section>
+
+    <!-- Pie de página -->
+    <footer>
+        &copy; 2026 Ascensores SENA - Proyecto formativo de Análisis y Desarrollo de Software
+    </footer>
+
+</body>
+</html>

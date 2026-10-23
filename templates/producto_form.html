@@ -1,0 +1,108 @@
+<!DOCTYPE html>                                   <!-- Documento HTML5 -->
+<html lang="es">                                  <!-- En español -->
+<head>
+    <meta charset="UTF-8">                                                  <!-- Para que salgan bien las tildes y la ñ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Para que se vea bien en el celular -->
+    <!-- Nuestro CSS. La ruta es relativa (../ = "suba una carpeta"), así funciona abriendo el archivo
+         directo en Visual Studio Code y también cuando corremos la página con Flask -->
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- Nuestro JavaScript de validaciones; "defer" = cárguelo cuando termine de leer el HTML -->
+    <script src="../static/js/validaciones.js" defer></script>
+    <title>{{ titulo }} - Ascensores SENA</title> <!-- "titulo" lo manda Python: "Nuevo producto" o "Editar producto" -->
+</head>
+<body>
+
+    <!-- ===================================================================
+         Barra de navegación. Las instrucciones de Jinja (los "if") van metidas
+         dentro de comentarios HTML: Flask igual las ejecuta y escoge qué links
+         mostrar, pero si abren el archivo suelto el navegador no las muestra.
+         =================================================================== -->
+    <nav>
+        <a href="../templates/index.html">Inicio</a>                         <!-- Este link siempre sale -->
+        <!-- {% if session.get('usuario_id') %} -->                          <!-- Si ya inició sesión... -->
+        <a href="../templates/productos.html">Catálogo</a>                   <!-- ...le mostramos el catálogo -->
+        <!-- {% if session.get('rol') == 'administrador' %} -->             <!-- Y si además es admin... -->
+        <a href="../templates/admin.html">Panel</a>                          <!-- ...le salen sus links extra -->
+        <a href="../templates/admin_productos.html">Productos</a>
+        <a href="../templates/admin_usuarios.html">Usuarios</a>
+        <a href="../templates/admin_mensajes.html">Mensajes</a>
+        <!-- {% endif %} -->                                                <!-- Fin de los links del admin -->
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>                 <!-- Botón para salir -->
+        <!-- {% else %} -->                                                 <!-- Si NO ha iniciado sesión... -->
+        <a href="../templates/login.html">Iniciar Sesión</a>                 <!-- ...le ofrecemos entrar -->
+        <a href="../templates/register.html">Registrarse</a>                 <!-- ...o registrarse -->
+        <!-- {% endif %} -->
+        <a href="../templates/contacto.html">Contacto</a>                    <!-- Contacto lo ve todo el mundo -->
+    </nav>
+
+    <!-- Este mismo formulario sirve para CREAR y para EDITAR (así no hacemos dos HTML iguales) -->
+    <div class="formulario-contenedor formulario-ancho">
+        <h2>{{ titulo }}</h2>
+
+        <!-- Avisos que manda Python con flash() (rojos si son error, verdes si salió bien).
+             Truco: avisos() es una función de app.py que "abre" este comentario para pintar los avisos.
+             Si abren el archivo suelto, el navegador lo ve como comentario y no muestra nada raro. -->
+        <!-- {{ avisos() }} -->
+        <!-- Cajita escondida donde el JavaScript escribe sus errores antes de mandar el formulario -->
+        <div id="errores-js" class="mensaje-error oculto"></div>
+
+        <!-- Si el producto trae id, estamos editando y el form va a la ruta de editar; si no, a la de nuevo -->
+        <!-- {% if producto.id %}
+            {% set destino = url_for('producto_editar', id=producto.id) %}
+        {% else %}
+            {% set destino = url_for('producto_nuevo') %}
+        {% endif %} -->
+        <form action="{{ destino }}" method="POST" onsubmit="return validarProducto(this)">
+
+            <label for="categoria_id">Categoría</label>
+            <!-- Lista desplegable con las categorías que vienen de la base de datos -->
+            <select id="categoria_id" name="categoria_id" required>
+                <option value="">-- Escoge una categoría --</option>
+                <!-- {% for c in categorias %} --><!-- "selected" deja escogida la categoría que ya tenía el producto -->
+                    <option value="{{ c.id }}" {% if c.id|string == producto.categoria_id|string %}selected{% endif %}>{{ c.nombre }}</option>
+                <!-- {% endfor %} -->
+            </select>
+
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" required minlength="3" maxlength="150" value="{{ producto.nombre or '' }}">
+
+            <label for="modelo">Modelo (ej: RES-300)</label>
+            <input type="text" id="modelo" name="modelo" required maxlength="100"
+                   pattern="[A-Za-z0-9\-]{2,100}" title="Solo letras, números y guiones" value="{{ producto.modelo or '' }}">
+
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" name="descripcion" rows="3" maxlength="1000">{{ producto.descripcion or '' }}</textarea>
+
+            <label for="precio">Precio</label>
+            <!-- type="number" con min y step: el navegador no deja escribir letras ni números negativos -->
+            <input type="number" id="precio" name="precio" required min="1" step="0.01" value="{{ producto.precio or '' }}">
+
+            <label for="stock">Stock</label>
+            <input type="number" id="stock" name="stock" required min="0" step="1" value="{{ producto.stock if producto.stock is not none else '' }}">
+
+            <label for="capacidad_carga_kg">Capacidad de carga en kg (solo ascensores)</label>
+            <input type="number" id="capacidad_carga_kg" name="capacidad_carga_kg" min="1" step="1" value="{{ producto.capacidad_carga_kg or '' }}">
+
+            <label for="capacidad_personas">Capacidad de personas (solo ascensores)</label>
+            <input type="number" id="capacidad_personas" name="capacidad_personas" min="1" step="1" value="{{ producto.capacidad_personas or '' }}">
+
+            <!-- Checkbox: si está marcado el producto sale en el catálogo -->
+            <label class="label-check">
+                <input type="checkbox" name="activo" value="1" {% if producto.activo %}checked{% endif %}>
+                Producto activo (visible en el catálogo)
+            </label>
+
+            <button type="submit" class="btn">Guardar</button>
+        </form>
+
+        <!-- Por si se arrepiente -->
+        <p class="texto-centrado"><a href="../templates/admin_productos.html">Cancelar y volver</a></p>
+    </div>
+
+    <!-- Pie de página -->
+    <footer>
+        &copy; 2026 Ascensores SENA - Proyecto formativo de Análisis y Desarrollo de Software
+    </footer>
+
+</body>
+</html>
