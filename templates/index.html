@@ -7,27 +7,27 @@
     <link rel="stylesheet" href="../static/css/styles.css">
     <!-- Nuestro JavaScript de validaciones; "defer" = cárguelo cuando termine de leer el HTML -->
     <script src="../static/js/validaciones.js" defer></script>
-    <title>Inicio - Ascensores SENA</title> <!-- Lo que sale en la pestaña del navegador -->
+    <title>Inicio - Bienvenido a Elevator Control System</title> 
 </head>
 <body>
 
 
     <nav>
-        <a href="../templates/index.html">Inicio</a>                         <!-- Este link siempre sale -->
-        <!-- {% if session.get('usuario_id') %} -->                          <!-- Si ya inició sesión... -->
-        <a href="../templates/productos.html">Catálogo</a>                   <!-- ...le mostramos el catálogo -->
-        <!-- {% if session.get('rol') == 'administrador' %} -->             <!-- Y si además es admin... -->
-        <a href="../templates/admin.html">Panel</a>                          <!-- ...le salen sus links extra -->
+        <a href="../templates/index.html">Inicio</a>                       
+        <!-- {% if session.get('usuario_id') %} -->                          
+        <a href="../templates/productos.html">Catálogo</a>                  
+        <!-- {% if session.get('rol') == 'administrador' %} -->             
+        <a href="../templates/admin.html">Panel</a>                          
         <a href="../templates/admin_productos.html">Productos</a>
         <a href="../templates/admin_usuarios.html">Usuarios</a>
         <a href="../templates/admin_mensajes.html">Mensajes</a>
-        <!-- {% endif %} -->                                                <!-- Fin de los links del admin -->
-        <a href="{{ url_for('logout') }}">Cerrar sesión</a>                 <!-- Botón para salir -->
-        <!-- {% else %} -->                                                 <!-- Si NO ha iniciado sesión... -->
-        <a href="../templates/login.html">Iniciar Sesión</a>                 <!-- ...le ofrecemos entrar -->
-        <a href="../templates/register.html">Registrarse</a>                 <!-- ...o registrarse -->
+        <!-- {% endif %} -->                                                
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>                 
+        <!-- {% else %} -->                                                 
+        <a href="../templates/login.html">Iniciar Sesión</a>                 
+        <a href="../templates/register.html">Registrarse</a>                
         <!-- {% endif %} -->
-        <a href="../templates/contacto.html">Contacto</a>                    <!-- Contacto lo ve todo el mundo -->
+        <a href="../templates/contacto.html">Contacto</a>                   
     </nav>
 
     <!-- Sección grande de bienvenida (el "hero") -->
