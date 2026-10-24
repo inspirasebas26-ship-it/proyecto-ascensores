@@ -1,10 +1,9 @@
-<!DOCTYPE html>                       <!-- Le avisamos al navegador que esto es HTML5 -->
-<html lang="es">                      <!-- La página está en español -->
+<!DOCTYPE html>                      
+<html lang="es">                      
 <head>
-    <meta charset="UTF-8">                                                  <!-- Para que salgan bien las tildes y la ñ -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Para que se vea bien en el celular -->
-    <!-- Nuestro CSS. La ruta es relativa (../ = "suba una carpeta"), así funciona abriendo el archivo
-         directo en Visual Studio Code y también cuando corremos la página con Flask -->
+    <meta charset="UTF-8">                                                 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> Para que se vea bien en el celular 
+    
     <link rel="stylesheet" href="../static/css/styles.css">
     <!-- Nuestro JavaScript de validaciones; "defer" = cárguelo cuando termine de leer el HTML -->
     <script src="../static/js/validaciones.js" defer></script>
@@ -12,11 +11,7 @@
 </head>
 <body>
 
-    <!-- ===================================================================
-         Barra de navegación. Las instrucciones de Jinja (los "if") van metidas
-         dentro de comentarios HTML: Flask igual las ejecuta y escoge qué links
-         mostrar, pero si abren el archivo suelto el navegador no las muestra.
-         =================================================================== -->
+
     <nav>
         <a href="../templates/index.html">Inicio</a>                         <!-- Este link siempre sale -->
         <!-- {% if session.get('usuario_id') %} -->                          <!-- Si ya inició sesión... -->
@@ -37,7 +32,7 @@
 
     <!-- Sección grande de bienvenida (el "hero") -->
     <section class="hero">
-        <h1>Bienvenido a Ascensores SENA</h1>                   <!-- Título principal -->
+        <h1>Bienvenido a Elevator Control System</h1>                   <!-- Título principal -->
         <p>Vendemos, instalamos y mantenemos ascensores residenciales y comerciales, además de repuestos.</p>
         <br>                                                    <!-- Un saltico de línea -->
         <a href="../templates/productos.html" class="btn">Ver catálogo</a> <!-- Si no tiene sesión, Flask lo manda al login -->
